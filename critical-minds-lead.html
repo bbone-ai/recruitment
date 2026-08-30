@@ -65,6 +65,15 @@
     background:var(--wash);border:1px solid var(--line);}
   .conditional.show{display:block;}
   .conditional .q:first-child{margin-top:0;}
+  .jd{margin:0 0 26px;}
+  .jd-label{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 8px;}
+  .jd a{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:10px;
+    border:1.5px solid var(--pill-border);background:#fff;color:var(--red-dark);
+    font-size:15px;font-weight:600;text-decoration:none;line-height:1.35;}
+  .jd a + a{margin-top:8px;}
+  .jd a:hover{background:var(--wash);}
+  .jd a::after{content:'\2197';margin-left:auto;font-weight:400;color:var(--accent);flex:0 0 auto;}
   .privacy{margin-top:34px;padding:16px;border-radius:10px;background:#fafafa;
     border:1px solid #ececec;font-size:13px;color:var(--accent);line-height:1.6;}
   .privacy strong{color:var(--ink);}
@@ -288,7 +297,7 @@
 
 <script>
 (function(){
-  var APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_EXEC_URL";
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAjK53qm6790vugDJHVlJ3UvzZnVQH-k6wp94uiXkqlj7DatUcXu-601O9Nnb-txELag/exec";
   var FORM_KEY   = "cm_lead";
   var REQUIRED   = ["firstName", "lastName", "email", "phone", "townOrArea", "experience", "whyThisRole", "relevantSkills", "portfolio", "hoursPreference", "availability", "earliestStart", "rightToWork", "dbsStatus", "saferRecruitmentConsent", "referee1Name", "referee1Relationship", "referee1Email", "referee2Name", "referee2Relationship", "referee2Email"];
   var PILL_KEYS  = ["portfolio", "hoursPreference", "rightToWork", "drivingLicence", "dbsStatus"];
