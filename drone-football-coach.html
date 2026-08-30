@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Drone Football Coach — OXIE application</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#ffffff; --line:#f0d9dc;
+    --red:#ff0255; --red-dark:#c1013f;
+    --pill:#ffffff; --pill-border:#e3b7bf;
+    --pill-selected:#ff0255; --pill-selected-ink:#ffffff;
+    --accent:#6b6b6b; --good:#2e6b4f; --wash:#fff5f7;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+    font-family:'Lato',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  body{padding:20px 16px 60px;max-width:600px;margin:0 auto;}
+  .logo-wrap{text-align:center;margin-bottom:18px;}
+  .logo-wrap img{height:120px;width:auto;}
+  h1{font-size:24px;font-weight:700;margin:8px 0 4px;line-height:1.25;color:var(--red);}
+  .sub{font-size:15px;color:var(--accent);margin:0 0 10px;line-height:1.55;}
+  .meta{font-size:14px;color:var(--ink);margin:0 0 26px;line-height:1.7;
+    padding:14px 16px;background:var(--wash);border-radius:10px;border:1px solid var(--line);}
+  .meta strong{font-weight:700;}
+  .meta div + div{margin-top:4px;}
+  h2{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--red);margin:38px 0 4px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2:first-of-type{margin-top:30px;}
+  .section-note{font-size:13px;color:var(--accent);margin:10px 0 0;line-height:1.5;}
+  .q{margin-top:24px;}
+  .q-text{font-size:16px;font-weight:600;margin:0 0 6px;line-height:1.4;}
+  .q-hint{font-size:13px;color:var(--accent);margin:0 0 10px;line-height:1.45;}
+  .req{color:var(--red);font-weight:700;}
+  .options{display:grid;gap:6px;}
+  .options.c2{grid-template-columns:repeat(2,1fr);}
+  .options.c3{grid-template-columns:repeat(3,1fr);}
+  .options.c4{grid-template-columns:repeat(4,1fr);}
+  .options.c1{grid-template-columns:1fr;}
+  .opt{
+    padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--pill-border);
+    background:var(--pill);font-size:13px;font-weight:500;cursor:pointer;user-select:none;
+    line-height:1.35;transition:background .15s,color .15s,border-color .15s;
+  }
+  .options.c1 .opt{text-align:left;padding:13px 14px;}
+  .opt.selected{background:var(--pill-selected);color:var(--pill-selected-ink);border-color:var(--pill-selected);}
+  input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{
+    width:100%;padding:13px 12px;border-radius:10px;border:1.5px solid var(--pill-border);
+    font-size:16px;font-family:inherit;background:#fff;color:var(--ink);
+  }
+  textarea{min-height:96px;resize:vertical;line-height:1.5;}
+  select{appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c1013f' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+  .row{display:flex;gap:10px;}
+  .row > div{flex:1;min-width:0;}
+  .row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;}
+  .consent{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:10px;
+    border:1.5px solid var(--pill-border);background:var(--wash);cursor:pointer;}
+  .consent input{width:20px;height:20px;flex:0 0 20px;margin:2px 0 0;accent-color:var(--red);}
+  .consent span{font-size:14px;line-height:1.5;}
+  .conditional{display:none;margin-top:16px;padding:16px;border-radius:10px;
+    background:var(--wash);border:1px solid var(--line);}
+  .conditional.show{display:block;}
+  .conditional .q:first-child{margin-top:0;}
+  .jd{margin:0 0 26px;}
+  .jd-label{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 8px;}
+  .jd a{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:10px;
+    border:1.5px solid var(--pill-border);background:#fff;color:var(--red-dark);
+    font-size:15px;font-weight:600;text-decoration:none;line-height:1.35;}
+  .jd a + a{margin-top:8px;}
+  .jd a:hover{background:var(--wash);}
+  .jd a::after{content:'\2197';margin-left:auto;font-weight:400;color:var(--accent);flex:0 0 auto;}
+  .privacy{margin-top:34px;padding:16px;border-radius:10px;background:#fafafa;
+    border:1px solid #ececec;font-size:13px;color:var(--accent);line-height:1.6;}
+  .privacy strong{color:var(--ink);}
+  .submit-btn{
+    width:100%;padding:17px;border:none;border-radius:10px;background:var(--red);color:#fff;
+    font-size:17px;font-weight:700;margin-top:26px;cursor:pointer;font-family:inherit;
+  }
+  .submit-btn:disabled{opacity:.4;}
+  .status{margin-top:14px;font-size:14px;text-align:center;min-height:20px;line-height:1.5;}
+  .status.error{color:var(--red-dark);font-weight:600;}
+  .done-screen{display:none;text-align:center;padding:50px 16px;}
+  .done-screen.show{display:block;}
+  .done-screen img{height:110px;width:auto;margin-bottom:22px;}
+  .done-screen h2{font-size:24px;margin:0 0 10px;color:var(--red);border:none;padding:0;
+    text-transform:none;letter-spacing:0;}
+  .done-screen p{font-size:15px;color:var(--accent);line-height:1.6;margin:0 auto;max-width:400px;}
+  .done-screen .ref{margin-top:20px;font-size:14px;color:var(--ink);}
+  .missing{outline:2px solid var(--red-dark);outline-offset:4px;border-radius:12px;}
+</style>
+</head>
+<body>
+
+<div id="formScreen">
+  <div class="logo-wrap"><img src="oxie-logo-black.png" alt="OXIE"></div>
+  <h1>Drone Football Coach</h1>
+  <p class="sub">Head Coach, Assistant Coach and Junior Coach. One form — tell us which one you are applying for and we will take it from there.</p>
+  <div class="meta">
+    <div><strong>Where:</strong> Oxford and Oxfordshire, at schools, community venues and events</div>
+    <div><strong>Coach training:</strong> Mondays 6:00–7:30pm, 14 September – 14 December 2026</div>
+    <div><strong>Hours:</strong> Sessional, with more hours available around bootcamps and competitions</div>
+    <div><strong>Who we are looking for:</strong> people who can hold a room of young people, learn the kit, and keep a session safe and fun. Drone experience is welcome but not required — we train coaches.</div>
+  </div>
+  <div class="jd">
+    <p class="jd-label">Read the full role descriptions</p>
+    <a href="https://docs.google.com/document/d/1DYZ_dgNJhEoLhWX7spNF6kc-NSTl7kIsluPH912tkW4/preview?tab=t.0" target="_blank" rel="noopener">Head Coach</a>
+    <a href="https://docs.google.com/document/d/1YGCi_2R4eo4k_ahFNjJG5xvFCiAyW4koeRAdGc4mAUE/preview?tab=t.0" target="_blank" rel="noopener">Assistant Coach</a>
+  </div>
+  <h2>About you</h2>
+  <div class="q">
+    <p class="q-text">Your name <span class="req">*</span></p>
+    <div class="row">
+      <div>
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" maxlength="50">
+      </div>
+      <div>
+        <label for="lastName">Last name</label>
+        <input type="text" id="lastName" maxlength="50">
+      </div>
+    </div>
+  </div>
+  <div class="q">
+    <p class="q-text">Email <span class="req">*</span></p>
+    <input type="email" id="email" maxlength="120" placeholder="you@example.com">
+  </div>
+  <div class="q">
+    <p class="q-text">Phone <span class="req">*</span></p>
+    <input type="tel" id="phone" maxlength="30" placeholder="07…">
+  </div>
+  <div class="q">
+    <p class="q-text">Town or area you live in <span class="req">*</span></p>
+    <p class="q-hint">Just the town or area — we do not need your full address at this stage.</p>
+    <input type="text" id="townOrArea" maxlength="80">
+  </div>
+  <h2>The role</h2>
+  <div class="q" data-q="roleLevel">
+    <p class="q-text">Which coaching role are you applying for? <span class="req">*</span></p>
+    <div class="options c1">
+        <div class="opt" data-val="Head Coach — leads sessions, holds the plan, responsible for the group">Head Coach — leads sessions, holds the plan, responsible for the group</div>
+        <div class="opt" data-val="Assistant Coach — supports the Head Coach, runs small groups">Assistant Coach — supports the Head Coach, runs small groups</div>
+        <div class="opt" data-val="Junior Coach — a young person supporting sessions, with training and mentoring">Junior Coach — a young person supporting sessions, with training and mentoring</div>
+    </div>
+  </div>
+  <div class="q">
+    <p class="q-text">Tell us about your experience working with young people. <span class="req">*</span></p>
+    <p class="q-hint">Paid, voluntary or informal all count — coaching, teaching, youth work, scouts, a club you help run. If you have not done this before, say what you have done that is close to it.</p>
+    <textarea id="experience" maxlength="1200"></textarea>
+  </div>
+  <div class="q">
+    <p class="q-text">Why Drone Football, and why now? <span class="req">*</span></p>
+    <textarea id="whyThisRole" maxlength="900"></textarea>
+  </div>
+  <div class="q">
+    <p class="q-text">Anything technical, sporting or coaching-related we should know?</p>
+    <p class="q-hint">Drones, RC, esports, refereeing, first aid, coaching badges, STEM teaching — whatever is relevant. Not essential.</p>
+    <textarea id="relevantSkills" maxlength="700"></textarea>
+  </div>
+  <div class="q">
+    <p class="q-text">A link, if you have one (optional)</p>
+    <p class="q-hint">LinkedIn, a coaching profile, a video of you running something.</p>
+    <input type="text" id="portfolio" maxlength="200" placeholder="https://">
+  </div>
+  <h2>Availability</h2>
+  <div class="q" data-q="hoursPreference">
+    <p class="q-text">What are you looking for? <span class="req">*</span></p>
+    <div class="options c3">
+        <div class="opt" data-val="A few hours a week">A few hours a week</div>
+        <div class="opt" data-val="Regular part-time">Regular part-time</div>
+        <div class="opt" data-val="As much as is going">As much as is going</div>
+    </div>
+  </div>
+  <div class="q" data-q="scheduleConfirmation">
+    <p class="q-text">Coach training runs <strong>Mondays, 6:00–7:30pm, from 14 September to 14 December 2026</strong>. Can you commit to that? <span class="req">*</span></p>
+    <p class="q-hint">It is the same block for every coaching level, and it is how you learn the kit. Be straight with us — we would rather know now.</p>
+    <div class="options c1">
+        <div class="opt" data-val="Yes — I can make all of it">Yes — I can make all of it</div>
+        <div class="opt" data-val="Yes — I would miss one or two">Yes — I would miss one or two</div>
+        <div class="opt" data-val="No — Monday evenings do not work for me">No — Monday evenings do not work for me</div>
+    </div>
+  </div>
+  <div class="q">
+    <p class="q-text">Which days and times could you usually work? <span class="req">*</span></p>
+    <p class="q-hint">Beyond the Monday training block. Bootcamps run in school holidays; term-time sessions are usually after school and at weekends.</p>
+    <textarea id="availability" maxlength="500"></textarea>
+  </div>
+  <div class="q">
+    <p class="q-text">Earliest date you could start <span class="req">*</span></p>
+    <input type="text" id="earliestStart" maxlength="60" placeholder="e.g. immediately, or mid-October">
+  </div>
+  <h2>Practical checks</h2>
+  <div class="q" data-q="rightToWork">
+    <p class="q-text">Do you have the right to work in the UK? <span class="req">*</span></p>
+    <div class="options c3">
+        <div class="opt" data-val="Yes">Yes</div>
+        <div class="opt" data-val="Not yet">Not yet</div>
+        <div class="opt" data-val="I would need sponsorship">I would need sponsorship</div>
+    </div>
+  </div>
+  <div class="q" data-q="drivingLicence">
+    <p class="q-text">Do you drive?</p>
+    <p class="q-hint">Useful for kit transport, not essential for most roles.</p>
+    <div class="options c3">
+        <div class="opt" data-val="Yes, with a car">Yes, with a car</div>
+        <div class="opt" data-val="Yes, no car">Yes, no car</div>
+        <div class="opt" data-val="No">No</div>
+    </div>
+  </div>
+  <div class="q" data-q="dbsStatus">
+    <p class="q-text">Do you currently hold an enhanced DBS certificate? <span class="req">*</span></p>
+    <p class="q-hint">Status only. We are not asking you to disclose anything that is on it, and there is no wrong answer — we arrange DBS checks for people who do not have one.</p>
+    <div class="options c1">
+        <div class="opt" data-val="Yes, and it is on the DBS Update Service">Yes, and it is on the DBS Update Service</div>
+        <div class="opt" data-val="Yes, but not on the Update Service">Yes, but not on the Update Service</div>
+        <div class="opt" data-val="No, not yet">No, not yet</div>
+        <div class="opt" data-val="Not sure">Not sure</div>
+    </div>
+  </div>
+  <div class="q">
+    <label class="consent">
+      <input type="checkbox" id="saferRecruitmentConsent">
+      <span>I understand this role is subject to OXIE's safer recruitment process, including an enhanced DBS check and references, and I am happy to go through it. <span class="req">*</span></span>
+    </label>
+  </div>
+  <h2>References</h2>
+  <p class="section-note">We will not contact anyone without telling you first.</p>
+  <div class="q">
+    <p class="q-text">Referee 1 <span class="req">*</span></p>
+    <div class="row">
+      <div>
+        <label for="referee1Name">Name</label>
+        <input type="text" id="referee1Name" maxlength="80">
+      </div>
+      <div>
+        <label for="referee1Relationship">How they know you</label>
+        <input type="text" id="referee1Relationship" maxlength="80" placeholder="e.g. former manager">
+      </div>
+    </div>
+  </div>
+  <div class="q">
+    <p class="q-text">Referee 1 email <span class="req">*</span></p>
+    <input type="email" id="referee1Email" maxlength="120">
+  </div>
+  <div class="q">
+    <p class="q-text">Referee 2 <span class="req">*</span></p>
+    <div class="row">
+      <div>
+        <label for="referee2Name">Name</label>
+        <input type="text" id="referee2Name" maxlength="80">
+      </div>
+      <div>
+        <label for="referee2Relationship">How they know you</label>
+        <input type="text" id="referee2Relationship" maxlength="80" placeholder="e.g. course tutor">
+      </div>
+    </div>
+  </div>
+  <div class="q">
+    <p class="q-text">Referee 2 email <span class="req">*</span></p>
+    <input type="email" id="referee2Email" maxlength="120">
+  </div>
+  <h2>Anything else</h2>
+  <div class="q">
+    <p class="q-text">Is there anything we can do to make the application or interview work better for you?</p>
+    <p class="q-hint">Interview format, timing, access, or anything else. A person reads this — it is never used to score your application.</p>
+    <textarea id="adjustments" maxlength="600"></textarea>
+  </div>
+  <div class="q">
+    <p class="q-text">How did you hear about this role?</p>
+    <select id="heardAbout">
+      <option value="" selected disabled>Choose one</option>
+      <option value="OXIE website">OXIE website</option>
+      <option value="Instagram">Instagram</option>
+      <option value="LinkedIn">LinkedIn</option>
+      <option value="Facebook">Facebook</option>
+      <option value="Someone at OXIE told me">Someone at OXIE told me</option>
+      <option value="A friend or colleague">A friend or colleague</option>
+      <option value="A school, college or university">A school, college or university</option>
+      <option value="A jobs board">A jobs board</option>
+      <option value="At an event">At an event</option>
+      <option value="Somewhere else">Somewhere else</option>
+    </select>
+  </div>
+  <div class="q">
+    <p class="q-text">Anything else you want us to know? (optional)</p>
+    <textarea id="freeText" maxlength="800"></textarea>
+  </div>
+
+  <div class="privacy">
+    <strong>What happens to what you write here.</strong>
+    Your application goes to a private OXIE recruitment sheet that only the
+    hiring team can open. We use it to shortlist, contact you, and nothing
+    else. We do not ask for information about your ethnicity, religion,
+    health, or any criminal record on this form — if you are offered a role,
+    DBS and safer-recruitment checks happen separately and properly.
+    We hold applications for six months and then delete them, unless you join
+    us. You can ask us to delete yours sooner: <a href="mailto:contact@oxie.org.uk"
+    style="color:#c1013f">contact@oxie.org.uk</a>.
+</div>
+
+  <button class="submit-btn" id="submitBtn">Send my application</button>
+  <div class="status" id="statusMsg"></div>
+</div>
+
+<div class="done-screen" id="doneScreen">
+  <img src="oxie-logo-black.png" alt="OXIE">
+  <h2>Thanks — your application is in.</h2>
+  <p>We read every application ourselves. You will hear from us either way, and we aim to come back to you within two weeks.</p>
+  <p class="ref" id="refLine"></p>
+</div>
+
+<script>
+(function(){
+  var APPS_SCRIPT_URL = "REPLACE_WITH_YOUR_APPS_SCRIPT_EXEC_URL";
+  var FORM_KEY   = "df_coach";
+  var REQUIRED   = ["firstName", "lastName", "email", "phone", "townOrArea", "roleLevel", "experience", "whyThisRole", "hoursPreference", "scheduleConfirmation", "availability", "earliestStart", "rightToWork", "dbsStatus", "saferRecruitmentConsent", "referee1Name", "referee1Relationship", "referee1Email", "referee2Name", "referee2Relationship", "referee2Email"];
+  var PILL_KEYS  = ["roleLevel", "hoursPreference", "scheduleConfirmation", "rightToWork", "drivingLicence", "dbsStatus"];
+  var FIELD_KEYS = ["firstName", "lastName", "email", "phone", "townOrArea", "experience", "whyThisRole", "relevantSkills", "portfolio", "availability", "earliestStart", "referee1Name", "referee1Relationship", "referee1Email", "referee2Name", "referee2Relationship", "referee2Email", "adjustments", "heardAbout", "freeText"];
+  var CHECK_KEYS = ["saferRecruitmentConsent"];
+
+  /* ---- device token ----
+     Not identity. It exists only so a duplicate submission from the same
+     device can be spotted. The application itself is identified by the
+     server-side reference the script returns. */
+  var TOKEN_KEY = 'oxie_rec_token';
+  var token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    token = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() :
+      ('t-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+
+  /* ---- offline-safe queue ----
+     An application is saved to this device before it is sent, so a dropped
+     connection on a phone in a sports hall never loses somebody's answers. */
+  var QUEUE_KEY = 'oxie_rec_queue_' + FORM_KEY;
+  function getQueue(){ try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch(e){ return []; } }
+  function setQueue(q){ try { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch(e){} }
+  function enqueue(p){ var q = getQueue(); q.push(p); setQueue(q); }
+
+  function sendOne(payload, cb){
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(function(res){ return res.json(); })
+      .then(function(j){ cb(!!j.ok, j); })
+      .catch(function(){ cb(false, null); });
+  }
+
+  function flushQueue(){
+    var q = getQueue();
+    if (!q.length) return;
+    var remaining = q.slice();
+    var next = remaining.shift();
+    sendOne(next, function(ok, j){
+      if (ok) {
+        setQueue(remaining);
+        if (j && j.ref) {
+          var refEl = document.getElementById('refLine');
+          if (refEl && !refEl.textContent) {
+            refEl.textContent = 'Your reference: ' + j.ref;
+          }
+        }
+        flushQueue();
+      }
+    });
+  }
+
+  flushQueue();
+  window.addEventListener('online', flushQueue);
+  setInterval(flushQueue, 15000);
+
+  /* ---- pill questions ---- */
+  var answers = {};
+  document.querySelectorAll('.q[data-q]').forEach(function(qEl){
+    var key = qEl.getAttribute('data-q');
+    qEl.querySelectorAll('.opt').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        qEl.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        answers[key] = opt.getAttribute('data-val');
+        qEl.classList.remove('missing');
+        applyConditionals();
+      });
+    });
+  });
+
+  /* ---- conditional blocks ---- */
+  function applyConditionals(){
+    document.querySelectorAll('[data-show-when]').forEach(function(block){
+      var rule = block.getAttribute('data-show-when').split('=');
+      var on = answers[rule[0]] === rule[1];
+      block.classList.toggle('show', on);
+    });
+  }
+  applyConditionals();
+
+  function isVisible(el){
+    if (!el) return false;
+    var block = el.closest('[data-show-when]');
+    return !block || block.classList.contains('show');
+  }
+
+  function readField(key){
+    var el = document.getElementById(key);
+    if (!el) return '';
+    if (!isVisible(el)) return '';
+    return (el.value || '').trim();
+  }
+
+  /* ---- submit ---- */
+  var statusEl = document.getElementById('statusMsg');
+  var submitBtn = document.getElementById('submitBtn');
+
+  submitBtn.addEventListener('click', function(){
+    document.querySelectorAll('.missing').forEach(function(el){ el.classList.remove('missing'); });
+
+    var missing = [];
+
+    REQUIRED.forEach(function(key){
+      var pillEl = document.querySelector('.q[data-q="' + key + '"]');
+      if (pillEl) {
+        if (!isVisible(pillEl)) return;
+        if (!answers[key]) { pillEl.classList.add('missing'); missing.push(key); }
+        return;
+      }
+      var el = document.getElementById(key);
+      if (!el) return;
+      if (!isVisible(el)) return;
+      var wrap = el.closest('.q') || el.closest('.row') || el;
+      if (el.type === 'checkbox') {
+        if (!el.checked) { (el.closest('.q') || el).classList.add('missing'); missing.push(key); }
+      } else if (!(el.value || '').trim()) {
+        wrap.classList.add('missing'); missing.push(key);
+      }
+    });
+
+    var emailEl = document.getElementById('email');
+    if (emailEl && isVisible(emailEl) && emailEl.value.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim())) {
+      (emailEl.closest('.q') || emailEl).classList.add('missing');
+      if (missing.indexOf('email') === -1) missing.push('email');
+    }
+
+    if (missing.length) {
+      statusEl.textContent = missing.length === 1
+        ? 'One thing still to fill in — it is highlighted above.'
+        : missing.length + ' things still to fill in — they are highlighted above.';
+      statusEl.className = 'status error';
+      var first = document.querySelector('.missing');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    submitBtn.disabled = true;
+
+    var payload = { form: FORM_KEY, token: token };
+    PILL_KEYS.forEach(function(k){
+      var pillEl = document.querySelector('.q[data-q="' + k + '"]');
+      payload[k] = isVisible(pillEl) ? (answers[k] || '') : '';
+    });
+    FIELD_KEYS.forEach(function(k){ payload[k] = readField(k); });
+    CHECK_KEYS.forEach(function(k){
+      var el = document.getElementById(k);
+      payload[k] = !!(el && isVisible(el) && el.checked);
+    });
+
+    enqueue(payload);
+
+    document.getElementById('formScreen').style.display = 'none';
+    document.getElementById('doneScreen').classList.add('show');
+    window.scrollTo(0, 0);
+
+    flushQueue();
+  });
+})();
+</script>
+</body>
+</html>
